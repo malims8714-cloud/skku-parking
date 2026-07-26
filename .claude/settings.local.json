@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(npm create vite@latest . -- --template react 2>&1)",
+      "PowerShell(echo y | npm create vite@latest . -- --template react --yes 2>&1; Write-Host \"Exit: $LASTEXITCODE\")",
+      "PowerShell(npx create-vite@latest . --template react 2>&1; Write-Host \"Exit: $LASTEXITCODE\")",
+      "PowerShell(npm install 2>&1)",
+      "PowerShell(Start-Process -NoNewWindow -FilePath \"npm\" -ArgumentList \"run\", \"dev\" -RedirectStandardOutput \"$env:TEMP\\\\vite_out.txt\" -RedirectStandardError \"$env:TEMP\\\\vite_err.txt\"; Start-Sleep -Seconds 5; Get-Content \"$env:TEMP\\\\vite_out.txt\", \"$env:TEMP\\\\vite_err.txt\" -ErrorAction SilentlyContinue)",
+      "Bash(npm run *)",
+      "Bash(curl -s http://localhost:5173)",
+      "mcp__Claude_Preview__preview_start",
+      "Bash(pkill -f \"node\")",
+      "PowerShell($proc = Get-NetTCPConnection -LocalPort 5173 -ErrorAction SilentlyContinue | Select-Object -ExpandProperty OwningProcess -First 1; if \\($proc\\) { Stop-Process -Id $proc -Force; Write-Host \"Killed PID $proc\" } else { Write-Host \"No process on 5173\" })"
+    ]
+  }
+}
