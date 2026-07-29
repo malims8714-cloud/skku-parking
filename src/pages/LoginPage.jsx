@@ -35,6 +35,10 @@ export default function LoginPage() {
   }
 
   async function handleGuest() {
+    if (!SUPABASE_CONFIGURED) {
+      navigate('/', { replace: true });
+      return;
+    }
     setError('');
     setGuestLoading(true);
     const { error } = await signInAsGuest();
