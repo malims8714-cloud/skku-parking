@@ -2,6 +2,7 @@ import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import WeatherCard from '../components/WeatherCard.jsx';
 import ParkingMap from '../components/ParkingMap.jsx';
+import CampusMap from '../components/CampusMap.jsx';
 import DestinationSelector from '../components/DestinationSelector.jsx';
 import RecommendationCard from '../components/RecommendationCard.jsx';
 import AdminDashboard from '../components/AdminDashboard.jsx';
@@ -26,6 +27,7 @@ export default function ParkingApp() {
 
   const [activeTab, setActiveTab]   = useState('home');
   const [screen, setScreen]         = useState('home');
+  const [mapView, setMapView]       = useState('campus');
   const [slots, setSlots]           = useState(() => generateInitialSlots());
   const [selectedBuilding, setSelectedBuilding] = useState(null);
   const [selectedVehicle, setSelectedVehicle]   = useState('normal');
@@ -197,8 +199,29 @@ export default function ParkingApp() {
 
   const renderMapView = () => (
     <div>
-      <h2 style={{ fontSize: 20, fontWeight: 700, marginBottom: 20 }}>주차장 현황</h2>
-      <ParkingMap slots={slots} congestion={congestion} interactive={false} />
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
+        <h2 style={{ fontSize: 20, fontWeight: 700 }}>주차 현황</h2>
+        <div style={{ display: 'flex', background: '#F3F4F6', borderRadius: 10, padding: 3 }}>
+          {[
+            { id: 'campus', label: '🗺 지도' },
+            { id: 'slots',  label: '🅿️ 구역별' },
+          ].map(v => (
+            <button key={v.id} onClick={() => setMapView(v.id)} style={{
+              padding: '5px 12px', borderRadius: 7, fontSize: 12, fontWeight: 600,
+              background: mapView === v.id ? '#fff' : 'transparent',
+              color:      mapView === v.id ? 'var(--primary)' : '#9CA3AF',
+              boxShadow:  mapView === v.id ? '0 1px 4px rgba(0,0,0,0.10)' : 'none',
+              transition: 'all 0.15s',
+            }}>
+              {v.label}
+            </button>
+          ))}
+        </div>
+      </div>
+      {mapView === 'campus'
+        ? <CampusMap slots={slots} congestion={congestion} />
+        : <ParkingMap slots={slots} congestion={congestion} interactive={false} />
+      }
     </div>
   );
 
