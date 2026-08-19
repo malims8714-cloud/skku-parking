@@ -16,7 +16,7 @@ import {
   PARKING_OFFICE,
 } from '../data/campusMapConfig.js';
 import '../styles/campusMap.css';
-
+import C1ParkingMap from './C1ParkingMap.jsx';
 // SVG 고정 색상 (지도 외관용, 구역 색은 parkingLots.js에서)
 const C = {
   bldFill:    '#8AAEC8',
@@ -176,6 +176,7 @@ function RenderParkingOffice({ office }) {
 
 export default function CampusMap({ slots }) {
   const [activeZone, setActiveZone] = useState(null);
+  const [detailLot, setDetailLot] = useState(null);
 
   const zoneStats = useMemo(() => {
     const stats = {};
@@ -198,10 +199,19 @@ export default function CampusMap({ slots }) {
     return { total, empty, occupied, pct: total ? Math.round(occupied / total * 100) : 0 };
   }, [zoneStats]);
 
-  const toggle  = id => setActiveZone(prev => prev === id ? null : id);
+  const toggle = id =>
+  setActiveZone(prev => prev === id ? null : id);
   const az      = activeZone;
   const azZone  = az ? ZONES.find(z => z.id === az) : null;
   const azStat  = az ? zoneStats[az] : null;
+
+  if (detailLot === 'C1') {
+    return (
+      <C1ParkingMap
+        onBack={() => setDetailLot(null)}
+      />
+    );
+  }
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
@@ -348,6 +358,26 @@ export default function CampusMap({ slots }) {
                 <span key={b} style={{ background: '#F3F4F6', borderRadius: 20, padding: '4px 11px', fontSize: 12, color: '#374151' }}>{b}</span>
               ))}
             </div>
+            {az === 'C' && (
+  <div style={{ padding: '0 16px 16px' }}>
+    <button
+      onClick={() => setDetailLot('C1')}
+      style={{
+        width: '100%',
+        border: 'none',
+        borderRadius: 12,
+        padding: '12px 14px',
+        background: '#EA580C',
+        color: '#fff',
+        fontSize: 14,
+        fontWeight: 700,
+        cursor: 'pointer',
+      }}
+    >
+      C-1 주차장 현황 보기 →
+    </button>
+  </div>
+)}
           </div>
         </div>
       )}
