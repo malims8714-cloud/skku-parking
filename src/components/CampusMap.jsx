@@ -5,13 +5,11 @@
 //   구역 색상·마커 위치 → src/data/parkingLots.js  (mapX, mapY)
 //   배경 이미지         → public/campus_map.png
 // ─────────────────────────────────────────────────────────────
-import { useMemo } from 'react'; // totals 계산에 사용
+import { useMemo } from 'react';
 import { ZONES } from '../data/parkingLots.js';
 import '../styles/campusMap.css';
 
 function congColor(p) { return p<40?'#34C759':p<60?'#FFCC00':p<80?'#FF9500':'#FF3B30'; }
-
-
 
 export default function CampusMap({ slots }) {
   const totals = useMemo(() => {
@@ -55,8 +53,6 @@ export default function CampusMap({ slots }) {
           {/* 배경 이미지 */}
           <image href="/campus_map.png" x="0" y="0" width="900" height="446"
             preserveAspectRatio="xMidYMid meet"/>
-
-          {/* 구역 반투명 오버레이 */}
         </svg>
       </div>
 
