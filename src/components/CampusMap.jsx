@@ -4,20 +4,28 @@
 // 내용 수정:
 //   구역 색상·마커 위치 → src/data/parkingLots.js  (mapX, mapY)
 //   배경 이미지         → public/campus_map.png
+//   C-1 상세 지도       → src/components/C1ParkingMap.jsx
 // ─────────────────────────────────────────────────────────────
-import { useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import { ZONES } from '../data/parkingLots.js';
+import C1ParkingMap from './C1ParkingMap.jsx';
 import '../styles/campusMap.css';
 
 function congColor(p) { return p<40?'#34C759':p<60?'#FFCC00':p<80?'#FF9500':'#FF3B30'; }
 
 export default function CampusMap({ slots }) {
+  const [showC1, setShowC1] = useState(false);
+
   const totals = useMemo(() => {
     const total    = slots.length;
     const empty    = slots.filter(s => s.status === 'empty').length;
     const occupied = slots.filter(s => s.status === 'occupied').length;
     return { total, empty, occupied, pct: total ? Math.round(occupied / total * 100) : 0 };
   }, [slots]);
+
+  if (showC1) {
+    return <C1ParkingMap onBack={() => setShowC1(false)} />;
+  }
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
@@ -49,12 +57,23 @@ export default function CampusMap({ slots }) {
               <feDropShadow dx="0" dy="2" stdDeviation="3.5" floodColor="rgba(0,0,0,0.22)"/>
             </filter>
           </defs>
-
-          {/* 배경 이미지 */}
           <image href="/campus_map.png" x="0" y="0" width="900" height="446"
             preserveAspectRatio="xMidYMid meet"/>
         </svg>
       </div>
+
+      {/* C-1 주차장 상세 보기 버튼 (팀원 작업 연동) */}
+      <button
+        onClick={() => setShowC1(true)}
+        style={{
+          width: '100%', border: 'none', borderRadius: 14,
+          padding: '14px', background: '#EA580C', color: '#fff',
+          fontSize: 15, fontWeight: 700, cursor: 'pointer',
+          boxShadow: '0 4px 12px rgba(234,88,12,0.3)',
+        }}
+      >
+        🅿️ C-1 주차장 현황 보기 →
+      </button>
 
       {/* 범례 */}
       <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', alignItems: 'center', padding: '4px 2px' }}>
